@@ -43,22 +43,21 @@ def forloop_image(img,empty_image,x,height,width,radius):
                     a = m.sqrt(gx_r**2 + gy_r**2)
                     b = m.sqrt(gx_g**2 + gy_g**2)
                     c = m.sqrt(gx_b**2 + gy_b**2)
-        widthpixels.append([int(a), int(b), int(c)])
-        #widthpixels.append([int(m.atan2(gx_r,gy_r)*255), int(m.atan2(gx_g,gy_g)*255), int(m.atan2(gx_b,gy_b)*255)])
+        widthpixels.append([int(m.atan2(gx_r,gy_r)*255), int(m.atan2(gx_g,gy_g)*255), int(m.atan2(gx_b,gy_b)*255)])
     return widthpixels
 
-def distance_image(image_path:str)->None:
+def distance_image(image_path:str,scale:int=1,output:str = "output")->None:
+    """This function takes in an image path, scale and output file name and returns a new image with the sobel filter applied to it."""
     start = timer()
-    radius:int = 4
     scale = 1
+    radius = 1
     img = Image.open(image_path)
-    std = 0.05
     width, height = img.size
     img=img.resize((int(width/scale),int(height/scale)))
     width, height = img.size
-    print(f"Image size: {width}x{height}")
+    
     img = img.convert("RGB")
-    print(f"Image mode: {img}")
+    
     empty_image = Image.new("RGB", (width, height), "white")
     pixels:list = np.zeros((width, height, 3))
     
@@ -71,7 +70,7 @@ def distance_image(image_path:str)->None:
             future = executor.submit(forloop_image, img, empty_image, x, height, width, radius)
             results.append([x, future])
             futures.append(future)
-            print(f"progress: {x}/{width}")
+            
 
         # Wait for all the futures to complete
         concurrent.futures.wait(futures)
@@ -79,11 +78,15 @@ def distance_image(image_path:str)->None:
             x = result[0]
             for y in range(height):
                 empty_image.putpixel((x, y), (result[1].result()[y][0], result[1].result()[y][1], result[1].result()[y][2]))
-    print(timer()-start)
-    empty_image.save("SobolOutput.jpg")
+    print("calculation time:",timer()-start)
+    empty_image.save(output)
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
-    distance_image("Black_circle.jpg")
+    image_path = input("Enter the path to the image: ")
+    scale = int(input("Enter the scale: "))
+    output = input("Enter the output file name: ")
+
+    distance_image(image_path, scale, output)
     
 

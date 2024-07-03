@@ -3,8 +3,10 @@ import numpy as np
 import multiprocessing
 import concurrent.futures
 from timeit import default_timer as timer   
+
 def normal_dist(x, mean, std):
     return (1 / (std * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((x - mean) / std) ** 2)
+
 def forloop_image(img,empty_image,x,height,width,radius):
     widthpixels = []
     for y in range(height):
@@ -52,20 +54,15 @@ def forloop_image(img,empty_image,x,height,width,radius):
             widthpixels.append([sum_r, sum_g, sum_b])
     return widthpixels
 
-def distance_image(image_path:str)->None:
+def distance_image(image_path:str, radius:int = 1, scale:int = 1, output:str = 'GaussianOutput.jpg')->None:
+    '''This function takes in an image path, radius, scale and output file name and returns a new image with the gaussian filter applied to it.'''
     start = timer()
-    radius:int = 3
-    scale = 1
     img = Image.open(image_path)
-    std = 0.05
     width, height = img.size
     img=img.resize((int(width/scale),int(height/scale)))
     width, height = img.size
-    print(f"Image size: {width}x{height}")
-    img = img.convert("RGB")
-    print(f"Image mode: {img}")
+    img = img.convert("RGB")    
     empty_image = Image.new("RGB", (width, height), "white")
-    pixels:list = np.zeros((width, height, 3))
     
     
     
@@ -76,7 +73,6 @@ def distance_image(image_path:str)->None:
             future = executor.submit(forloop_image, img, empty_image, x, height, width, radius)
             results.append([x, future])
             futures.append(future)
-            print(f"progress: {x}/{width}")
 
         # Wait for all the futures to complete
         concurrent.futures.wait(futures)
@@ -84,11 +80,17 @@ def distance_image(image_path:str)->None:
             x = result[0]
             for y in range(height):
                 empty_image.putpixel((x, y), (result[1].result()[y][0], result[1].result()[y][1], result[1].result()[y][2]))
-    print(timer()-start)
-    empty_image.save("GaussianOutput.jpg")
+    print("calculation time:",timer()-start)
+    empty_image.save(output)
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
-    distance_image("Black_circle.jpg")
+    image_path = input("Enter the path to the image: ")
+    radius = int(input("Enter the radius: "))
+    scale = int(input("Enter the scale: "))
+    output = input("Enter the output file name: ")
+
+    distance_image(image_path, radius, scale, output)
+    
     
 
