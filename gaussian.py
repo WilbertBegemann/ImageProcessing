@@ -54,7 +54,7 @@ def forloop_image(img,empty_image,x,height,width,radius):
 
 def distance_image(image_path:str)->None:
     start = timer()
-    radius:int = 1
+    radius:int = 3
     scale = 1
     img = Image.open(image_path)
     std = 0.05
@@ -85,10 +85,10 @@ def distance_image(image_path:str)->None:
             for y in range(height):
                 empty_image.putpixel((x, y), (result[1].result()[y][0], result[1].result()[y][1], result[1].result()[y][2]))
     print(timer()-start)
-    empty_image.save("output.jpg")
+    empty_image.save("GaussianOutput.jpg")
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
-    distance_image("noise.jpg")
+    distance_image("Black_circle.jpg")
     
 
