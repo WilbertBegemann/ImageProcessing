@@ -26,3 +26,38 @@ or
 ![alt text](https://github.com/WilbertBegemann/ImageProcessing/blob/main/sobel.jpg?raw=true)
 ## gaussian.py result
 ![alt text](https://github.com/WilbertBegemann/ImageProcessing/blob/main/gaussian.jpg?raw=true)
+## ascii.py result
+![alt text](https://github.com/WilbertBegemann/ImageProcessing/blob/main/ascii.png?raw=true)
+```
+/------------------------------\
+|                              |
+|                              |
+|           ///--\\\           |
+|        ///////-\\\\\\        |
+|       ///////--\\\\\\\       |
+|      //////      \\\\\\      |
+|     /////          \\\\\     |
+|    /////            \\\\\    |
+|   /////              \\\\\   |
+|   ////                \\\\   |
+|   ///                  \\\   |
+|  ////                  \\\\  |
+|  ///|                   \\\  |
+|  |//                    \\\  |
+|  |||                    |||  |
+|  |\\                    ///  |
+|  \\\\                   ///  |
+|  \\\\                  ////  |
+|   \\\                  ///   |
+|   \\\\                ////   |
+|    \\\\              /////   |
+|    \\\\\            /////    |
+|     \\\\\          /////     |
+|      \\\\\\-     //////      |
+|       \\\\\\\--///////       |
+|         \\\\\\///////        |
+|           \\\--///           |
+|                              |
+|                              |
+\------------------------------/
+```
